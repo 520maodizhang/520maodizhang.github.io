@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>毛地张的复古桌面 - Retro Desktop Blog</title>
+  <meta name="description" content="一个融合 Windows XP 桌面、Y2K 美学与二次元元素的个人博客">
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&family=Noto+Sans+SC:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <!-- CRT 扫描线滤镜覆盖层 -->
+  <div class="crt-overlay"></div>
+  <div class="scanlines"></div>
+
+  <!-- Boot 动画 -->
+  <div id="boot-screen" class="boot-screen">
+    <div class="boot-content">
+      <pre class="boot-logo">
+  __  __    _    ____   ___ _____
+ |  \/  |  / \  / ___| / _ \_   _|
+ | |\/| | / _ \| |  _ | | | || |
+ | |  | |/ ___ \ |_| || |_| || |
+ |_|  |_/_/   \_\____| \___/ |_|
+      </pre>
+      <div class="boot-bar">
+        <div class="boot-bar-fill"></div>
+      </div>
+      <p class="boot-text">系统启动中... Loading Retro OS v1.0</p>
+    </div>
+  </div>
+
+  <!-- 桌面 -->
+  <div id="desktop" class="desktop hidden">
+    <!-- 桌面图标 -->
+    <div class="desktop-icons" id="desktop-icons">
+      <div class="desktop-icon" data-window="blog">
+        <div class="icon-img">📝</div>
+        <div class="icon-label">我的博客</div>
+      </div>
+      <div class="desktop-icon" data-window="about">
+        <div class="icon-img">👤</div>
+        <div class="icon-label">关于我</div>
+      </div>
+      <div class="desktop-icon" data-window="works">
+        <div class="icon-img">🎨</div>
+        <div class="icon-label">作品集</div>
+      </div>
+      <div class="desktop-icon" data-window="guestbook">
+        <div class="icon-img">💬</div>
+        <div class="icon-label">留言板</div>
+      </div>
+      <div class="desktop-icon" data-window="music">
+        <div class="icon-img">🎵</div>
+        <div class="icon-label">音乐盒</div>
+      </div>
+      <div class="desktop-icon" data-window="links">
+        <div class="icon-img">🔗</div>
+        <div class="icon-label">友情链接</div>
+      </div>
+    </div>
+
+    <!-- 桌面宠物 -->
+    <div class="desktop-pet" id="pet">
+      <div class="pet-sprite">🐱</div>
+      <div class="pet-bubble hidden" id="pet-bubble">欢迎来到我的博客~</div>
+    </div>
+
+    <!-- 窗口容器 -->
+    <div id="windows-container"></div>
+
+    <!-- 任务栏 -->
+    <div class="taskbar" id="taskbar">
+      <button class="start-button" id="start-btn">
+        <span class="start-flag">★</span>
+        <span>开始</span>
+      </button>
+      <div class="taskbar-divider"></div>
+      <div class="taskbar-items" id="taskbar-items"></div>
+      <div class="system-tray">
+        <span class="tray-icon" id="clock">00:00</span>
+        <span class="tray-icon">🔊</span>
+        <span class="tray-icon">🌐</span>
+      </div>
+    </div>
+
+    <!-- 开始菜单 -->
+    <div class="start-menu hidden" id="start-menu">
+      <div class="start-menu-header">
+        <div class="start-menu-user">毛地张</div>
+        <div class="start-menu-sub">Retro OS</div>
+      </div>
+      <div class="start-menu-items">
+        <div class="start-menu-item" data-window="blog">
+          <span class="menu-icon">📝</span> 我的博客
+        </div>
+        <div class="start-menu-item" data-window="about">
+          <span class="menu-icon">👤</span> 关于我
+        </div>
+        <div class="start-menu-item" data-window="works">
+          <span class="menu-icon">🎨</span> 作品集
+        </div>
+        <div class="start-menu-item" data-window="guestbook">
+          <span class="menu-icon">💬</span> 留言板
+        </div>
+        <div class="start-menu-item" data-window="music">
+          <span class="menu-icon">🎵</span> 音乐盒
+        </div>
+        <div class="start-menu-item" data-window="links">
+          <span class="menu-icon">🔗</span> 友情链接
+        </div>
+        <hr class="menu-separator">
+        <div class="start-menu-item" id="shutdown-btn">
+          <span class="menu-icon">⏻</span> 关机
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 关机画面 -->
+  <div id="shutdown-screen" class="shutdown-screen hidden">
+    <div class="shutdown-content">
+      <p>正在关机...</p>
+      <p class="shutdown-sub">感谢访问毛地张的复古桌面</p>
+      <button onclick="location.reload()" class="restart-btn">重新启动</button>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
