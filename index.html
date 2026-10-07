@@ -4,11 +4,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>毛地张的复古桌面</title>
-  <meta name="description" content="Windows XP 风格桌面个人博客">
+  <meta name="description" content="Windows XP 桌面 × Fuyukawa 手账 × pcmoe 萌系">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <!-- Boot 阶段 -->
+  <!-- Boot 阶段 — MoeKernel 风格 -->
   <div id="boot-stage" class="boot-stage">
     <img src="assets/icons/1.png" alt="OS" style="width:64px;height:64px;margin-bottom:24px;image-rendering:pixelated;">
     <div class="boot-brand">
@@ -23,7 +23,7 @@
     </div>
   </div>
 
-  <!-- Login 阶段 -->
+  <!-- Login 阶*阶段 — MoeKernel 灰色渐变 + Yuimi Kisara 深色点缀 -->
   <div id="login-stage" class="login-stage hidden">
     <div class="login-top-bar"></div>
     <div class="login-body">
@@ -53,16 +53,19 @@
     </div>
   </div>
 
-  <!-- 桌面 -->
+  <!-- 桌面 — MoeKernel 壁纸 + pcmoe 萌系背景叠加 -->
   <div id="desktop" class="desktop hidden">
+    <!-- Fuyukawa 樱花雨 -->
+    <div class="sakura-rain" id="sakura"></div>
+    <!-- 桌面图标区 -->
     <div class="icon-area" id="icon-area"></div>
+    <!-- 窗口容器 -->
     <div id="windows"></div>
-    <!-- 右侧桌宠启动器 -->
+    <!-- 右侧桌宠启动器 — MoeKernel -->
     <div class="right-sidebar" id="right-sidebar"></div>
-    <!-- 桌宠容器 -->
     <div id="pets"></div>
 
-    <!-- 任务栏 -->
+    <!-- 任务栏 — MoeKernel -->
     <div class="taskbar">
       <button class="start-btn" id="start-btn">
         <img src="assets/icons/1.png" alt="Windows" style="width:20px;height:20px;object-fit:contain;">
@@ -76,7 +79,7 @@
       </div>
     </div>
 
-    <!-- 开始菜单 -->
+    <!-- 开始菜单 — MoeKernel -->
     <div class="start-menu hidden" id="start-menu">
       <div class="start-header">
         <img src="assets/avatarSrc.jpg" style="width:50px;height:50px;border:2px solid #b8b8b8;border-radius:2px;object-fit:cover;background:#fff;">
