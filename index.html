@@ -4,55 +4,74 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>毛地张的复古桌面</title>
-  <meta name="description" content="Windows XP 风格桌面 × Y2K 霓虹 × 二次元手账">
+  <meta name="description" content="Windows XP 风格桌面个人博客">
   <link rel="stylesheet" href="style.css">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=VT323&display=swap" rel="stylesheet">
 </head>
 <body>
-  <!-- CRT 扫描线 -->
-  <div class="crt-scanlines"></div>
-  <div class="crt-vignette"></div>
+  <!-- Boot 阶段 -->
+  <div id="boot-stage" class="boot-stage">
+    <img src="assets/icons/1.png" alt="OS" style="width:64px;height:64px;margin-bottom:24px;image-rendering:pixelated;">
+    <div class="boot-brand">
+      <span style="color:#fff;font-size:36px;font-weight:bold;">毛地张</span>
+      <span style="color:#c0392b;font-size:28px;font-style:italic;font-weight:bold;">xp</span>
+    </div>
+    <div style="color:#ccc;font-size:14px;margin-bottom:80px;">Welcome</div>
+    <div class="boot-progress">
+      <div class="boot-progress-anim">
+        <div class="boot-block"></div><div class="boot-block"></div><div class="boot-block"></div>
+      </div>
+    </div>
+  </div>
 
-  <!-- Boot 画面 -->
-  <div id="boot" class="boot">
-    <pre class="boot-art">
-  __  __    _    ____   ___ _____
- |  \/  |  / \  / ___| / _ \_   _|
- | |\/| | / _ \| |  _ | | | || |
- | |  | |/ ___ \ |_| || |_| || |
- |_|  |_/_/   \_\____| \___/ |_|
-    </pre>
-    <div class="boot-bar"><div class="boot-bar-fill"></div></div>
-    <p class="boot-text">Retro OS starting...</p>
+  <!-- Login 阶段 -->
+  <div id="login-stage" class="login-stage hidden">
+    <div class="login-top-bar"></div>
+    <div class="login-body">
+      <div class="login-left">
+        <img src="assets/icons/1.png" alt="OS" style="width:72px;height:72px;image-rendering:pixelated;margin-bottom:8px;">
+        <div class="login-brand">
+          <span style="color:#fff;font-size:32px;font-weight:bold;text-shadow:1px 1px 3px rgba(0,0,0,0.5);">毛地张</span>
+          <span style="color:#c0392b;font-size:24px;font-style:italic;font-weight:bold;">xp</span>
+        </div>
+        <div style="color:#eee;font-size:13px;text-shadow:1px 1px 2px rgba(0,0,0,0.4);">Software Developer</div>
+        <div style="color:#ddd;font-size:12px;margin-top:16px;text-shadow:1px 1px 2px rgba(0,0,0,0.4);">To begin, click your user name</div>
+      </div>
+      <div class="login-right">
+        <div class="login-user-card" id="login-user-card">
+          <img src="assets/avatarSrc.jpg" alt="毛地张" style="width:80px;height:80px;border:2px solid #fff;border-radius:4px;object-fit:cover;">
+          <div>
+            <div style="color:#fff;font-size:18px;font-weight:bold;text-shadow:1px 1px 3px rgba(0,0,0,0.5);">毛地张</div>
+            <div style="color:#ddd;font-size:12px;text-shadow:1px 1px 2px rgba(0,0,0,0.4);">Software Developer</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="login-bottom-bar">
+      <button class="login-restart-btn" onclick="location.reload()">
+        <span style="font-size:16px;">⟳</span><span>Restart</span>
+      </button>
+    </div>
   </div>
 
   <!-- 桌面 -->
   <div id="desktop" class="desktop hidden">
-    <!-- 樱花雨 -->
-    <div class="sakura-rain" id="sakura"></div>
-
-    <!-- 桌面图标区 -->
     <div class="icon-area" id="icon-area"></div>
-
-    <!-- 窗口容器 -->
     <div id="windows"></div>
-
-    <!-- 桌宠 -->
-    <div class="pet" id="pet">
-      <span class="pet-sprite">🐷</span>
-      <div class="pet-bubble hidden" id="pet-bubble"></div>
-    </div>
+    <!-- 右侧桌宠启动器 -->
+    <div class="right-sidebar" id="right-sidebar"></div>
+    <!-- 桌宠容器 -->
+    <div id="pets"></div>
 
     <!-- 任务栏 -->
     <div class="taskbar">
       <button class="start-btn" id="start-btn">
-        <span class="start-flag">🪟</span>
-        <span class="start-text">start</span>
+        <img src="assets/icons/1.png" alt="Windows" style="width:20px;height:20px;object-fit:contain;">
+        <span>start</span>
       </button>
       <div class="taskbar-windows" id="taskbar-windows"></div>
       <div class="system-tray">
-        <span class="tray-icon">🔊</span>
+        <img src="assets/icons/tray/icon1.png" style="width:16px;height:16px;">
+        <img src="assets/icons/tray/icon2.png" style="width:16px;height:16px;">
         <span class="tray-clock" id="clock">12:00 PM</span>
       </div>
     </div>
@@ -60,20 +79,15 @@
     <!-- 开始菜单 -->
     <div class="start-menu hidden" id="start-menu">
       <div class="start-header">
-        <div class="start-avatar">🐱</div>
+        <img src="assets/avatarSrc.jpg" style="width:50px;height:50px;border:2px solid #b8b8b8;border-radius:2px;object-fit:cover;background:#fff;">
         <span class="start-username">毛地张</span>
       </div>
       <div class="start-body">
         <div class="start-left" id="start-programs"></div>
-        <div class="start-right">
-          <div class="start-place" data-window="blog">📁 我的文档</div>
-          <div class="start-place" data-window="works">🖼️ 图片收藏</div>
-          <div class="start-place" data-window="music">🎵 我的音乐</div>
-          <div class="start-place" data-window="links">🌐 收藏夹</div>
-        </div>
+        <div class="start-right" id="start-places"></div>
       </div>
       <div class="start-footer">
-        <button class="start-footer-btn" id="shutdown-btn">⏻ 关机</button>
+        <button class="start-footer-btn" id="shutdown-btn">⏻ Turn Off Computer</button>
       </div>
     </div>
   </div>
@@ -81,7 +95,7 @@
   <!-- 关机 -->
   <div id="shutdown" class="shutdown hidden">
     <p class="shutdown-text">It is now safe to turn off your computer.</p>
-    <button class="restart-btn" onclick="location.reload()">重新启动</button>
+    <button class="restart-btn" onclick="location.reload()">⟳ Restart</button>
   </div>
 
   <script src="app.js"></script>
