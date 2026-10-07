@@ -1,902 +1,513 @@
-/* ============================================
-   复古桌面博客 - 融合 XP + Y2K + 二次元
-   ============================================ */
+/* ================================================
+   复古桌面博客 — 基于真实源码提取的设计
+   MoeKernel XP 银色金属 + Yuimi 深靛蓝/霓虹 + Fuyukawa 手账
+   ================================================ */
 
-/* --- CSS 变量 --- */
+/* --- Fuyukawa 手账配色变量 --- */
 :root {
-  /* Y2K 霓虹配色 */
-  --neon-pink: #ff6ec7;
-  --neon-blue: #00d4ff;
-  --neon-purple: #b026ff;
-  --neon-green: #39ff14;
-  --neon-yellow: #fff200;
+  --ink: #31425f;
+  --ink-soft: #657491;
+  --paper: #fffaf1;
+  --paper-soft: #fff4df;
+  --cream: #fff7e9;
+  --blue: #9fc8eb;
+  --blue-soft: #dceefa;
+  --pink: #f7b7c8;
+  --pink-soft: #ffe2ea;
+  --lavender: #c9c2ee;
+  --mint: #b8dbc9;
+  --line: rgba(88, 110, 145, 0.18);
 
-  /* XP 风格配色 */
-  --xp-blue: #0058e6;
-  --xp-blue-light: #3a8eea;
-  --xp-blue-dark: #0030a0;
-  --xp-luna-start: #1f5cc0;
-  --xp-luna-end: #0a2e7a;
-  --xp-taskbar: #245edb;
-  --xp-taskbar-light: #4b8bdf;
-  --xp-window-bg: #ece9d8;
-  --xp-window-border: #0831d9;
-  --xp-titlebar: #0a64db;
-  --xp-titlebar-grad1: #0058ee;
-  --xp-titlebar-grad2: #3a8eff;
+  /* --- Yuimi Kisara 深色系 --- */
+  --kisara-bg: #111636;
+  --kisara-fg: #f8f5ff;
+  --kisara-pink: #ff4969;
+  --kisara-blue: #91b1ff;
+  --kisara-cyan: #65d9ff;
+  --kisara-deep: #0c1029;
+  --kisara-panel: #171c40;
 
-  /* 二次元点缀色 */
-  --sakura-pink: #ffb7c5;
-  --sakura-light: #fff0f5;
-  --moe-mint: #98e0cd;
+  /* --- MoeKernel XP Classic Silver Chrome --- */
+  --xp-chrome-light: #f4f4f4;
+  --xp-chrome-mid: #e0e0e0;
+  --xp-chrome-dark: #c8c8c8;
+  --xp-chrome-darker: #b0b0b0;
+  --xp-chrome-border: #a0a0a0;
+  --xp-chrome-border-dark: #767676;
+  --xp-chrome-highlight: #d8d8d8;
+  --xp-chrome-hover: #ececec;
+  --xp-selection-overlay: rgba(80, 80, 80, 0.45);
+  --xp-selection-label-bg: rgba(60, 60, 60, 0.8);
 
-  /* 基础色 */
-  --desktop-bg: #3a6ea5;
-  --text-dark: #1a1a2e;
-  --text-light: #e0e0e0;
-  --crt-glow: rgba(0, 212, 255, 0.15);
+  /* --- 字体（从源码提取） --- */
+  --font-xp: 'Trebuchet MS', Tahoma, 'Microsoft Sans Serif', Arial, sans-serif;
+  --font-body: Inter, 'Segoe UI', 'Microsoft YaHei', sans-serif;
+  --font-mono: 'VT323', monospace;
 }
 
-/* --- 全局重置 --- */
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
 body {
-  font-family: 'Noto Sans SC', 'Microsoft YaHei', sans-serif;
+  font-family: var(--font-body);
   overflow: hidden;
   height: 100vh;
-  background: var(--desktop-bg);
   user-select: none;
+  background: var(--kisara-bg);
 }
 
 .hidden { display: none !important; }
 
-/* ============================================
-   CRT 扫描线效果
-   ============================================ */
-.crt-overlay {
-  position: fixed;
-  top: 0; left: 0; width: 100%; height: 100%;
-  pointer-events: none;
-  z-index: 99998;
-  background: radial-gradient(ellipse at center, transparent 60%, rgba(0,0,0,0.4) 100%);
+/* ================================================
+   CRT 效果
+   ================================================ */
+.crt-scanlines {
+  position: fixed; inset: 0; z-index: 99999; pointer-events: none;
+  background: repeating-linear-gradient(0deg,
+    rgba(0,0,0,0.06), rgba(0,0,0,0.06) 1px, transparent 1px, transparent 3px);
+}
+.crt-vignette {
+  position: fixed; inset: 0; z-index: 99998; pointer-events: none;
+  background: radial-gradient(ellipse at center, transparent 65%, rgba(0,0,0,0.35) 100%);
 }
 
-.scanlines {
-  position: fixed;
-  top: 0; left: 0; width: 100%; height: 100%;
-  pointer-events: none;
-  z-index: 99999;
-  background: repeating-linear-gradient(
-    0deg,
-    rgba(0, 0, 0, 0.08),
-    rgba(0, 0, 0, 0.08) 1px,
-    transparent 1px,
-    transparent 3px
-  );
-  opacity: 0.5;
-}
-
-/* ============================================
-   Boot 启动画面
-   ============================================ */
-.boot-screen {
-  position: fixed;
-  top: 0; left: 0; width: 100%; height: 100%;
-  background: #000;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 10000;
+/* ================================================
+   Boot 画面 — Yuimi 深靛蓝 + 霓虹色
+   ================================================ */
+.boot {
+  position: fixed; inset: 0; z-index: 10000;
+  background: var(--kisara-bg);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 30px;
   transition: opacity 0.8s ease;
 }
-
-.boot-content {
-  text-align: center;
-  color: var(--neon-green);
+.boot-art {
+  font-family: var(--font-mono); font-size: 13px; line-height: 1.4;
+  color: var(--kisara-cyan);
+  text-shadow: 0 0 10px var(--kisara-cyan), 0 0 20px var(--kisara-cyan);
 }
-
-.boot-logo {
-  font-family: 'Press Start 2P', monospace;
-  font-size: 12px;
-  color: var(--neon-blue);
-  text-shadow: 0 0 10px var(--neon-blue), 0 0 20px var(--neon-blue);
-  margin-bottom: 40px;
-  line-height: 1.5;
-}
-
 .boot-bar {
-  width: 300px;
-  height: 16px;
-  border: 2px solid var(--neon-blue);
-  margin: 0 auto 20px;
-  overflow: hidden;
-  background: #001;
+  width: 280px; height: 14px;
+  border: 2px solid var(--kisara-blue);
+  overflow: hidden; background: var(--kisara-deep);
 }
-
 .boot-bar-fill {
-  width: 0%;
-  height: 100%;
-  background: linear-gradient(90deg, var(--neon-blue), var(--neon-pink), var(--neon-purple));
-  box-shadow: 0 0 15px var(--neon-blue);
+  width: 0; height: 100%;
+  background: linear-gradient(90deg, var(--kisara-cyan), var(--kisara-pink), var(--kisara-blue));
+  box-shadow: 0 0 12px var(--kisara-cyan);
   animation: bootLoad 2.5s ease-in-out forwards;
 }
-
-@keyframes bootLoad {
-  0% { width: 0%; }
-  100% { width: 100%; }
-}
-
+@keyframes bootLoad { to { width: 100%; } }
 .boot-text {
-  font-family: 'VT323', monospace;
-  font-size: 20px;
-  color: var(--neon-green);
-  text-shadow: 0 0 8px var(--neon-green);
+  font-family: var(--font-mono); font-size: 18px;
+  color: var(--kisara-fg); opacity: 0.7;
 }
 
-/* ============================================
-   桌面
-   ============================================ */
+/* ================================================
+   桌面 — Yuimi 深靛蓝底 + 星空 + Fuyukawa 网格
+   ================================================ */
 .desktop {
-  position: fixed;
-  top: 0; left: 0; width: 100%; height: 100%;
-  background: linear-gradient(135deg, #1a0a2e 0%, #16213e 30%, #0f3460 60%, #1a0a2e 100%);
+  position: fixed; inset: 0;
+  background:
+    radial-gradient(circle at 18% 8%, rgba(255, 226, 234, 0.06), transparent 260px),
+    radial-gradient(circle at 86% 12%, rgba(220, 238, 250, 0.06), transparent 320px),
+    linear-gradient(180deg, var(--kisara-bg), var(--kisara-deep));
   overflow: hidden;
 }
-
-/* 桌面背景装饰 - Y2K 星空 */
+/* Fuyukawa 网格背景 */
 .desktop::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; width: 100%; height: 100%;
+  content: ''; position: absolute; inset: 0; z-index: 0; pointer-events: none;
   background-image:
-    radial-gradient(2px 2px at 20% 30%, var(--neon-pink), transparent),
-    radial-gradient(2px 2px at 60% 70%, var(--neon-blue), transparent),
-    radial-gradient(1px 1px at 50% 50%, var(--neon-yellow), transparent),
-    radial-gradient(1px 1px at 80% 10%, var(--neon-green), transparent),
-    radial-gradient(2px 2px at 90% 60%, var(--neon-purple), transparent),
-    radial-gradient(1px 1px at 33% 80%, var(--neon-pink), transparent),
-    radial-gradient(1px 1px at 15% 90%, var(--neon-blue), transparent);
+    linear-gradient(rgba(145, 177, 255, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(145, 177, 255, 0.04) 1px, transparent 1px);
+  background-size: 28px 28px;
+  mask-image: linear-gradient(180deg, #000, transparent 72%);
+}
+/* Yuimi 星点 */
+.desktop::after {
+  content: ''; position: absolute; inset: 0; z-index: 0; pointer-events: none;
+  background-image:
+    radial-gradient(1.5px 1.5px at 20% 30%, var(--kisara-pink), transparent),
+    radial-gradient(1.5px 1.5px at 60% 70%, var(--kisara-cyan), transparent),
+    radial-gradient(1px 1px at 50% 50%, var(--kisara-blue), transparent),
+    radial-gradient(1px 1px at 80% 10%, var(--kisara-pink), transparent),
+    radial-gradient(1.5px 1.5px at 90% 60%, var(--kisara-blue), transparent),
+    radial-gradient(1px 1px at 33% 80%, var(--kisara-cyan), transparent);
   background-size: 200px 200px;
   animation: twinkle 4s ease-in-out infinite alternate;
+  opacity: 0.5;
+}
+@keyframes twinkle { 0% { opacity: 0.25; } 100% { opacity: 0.55; } }
+
+/* ================================================
+   樱花雨 — Fuyukawa
+   ================================================ */
+.sakura-rain { position: fixed; inset: 0; z-index: 5; pointer-events: none; overflow: hidden; }
+.sakura {
+  position: absolute; width: 12px; height: 12px;
+  background: var(--pink);
+  border-radius: 0 100% 0 100%;
   opacity: 0.6;
-  pointer-events: none;
+  animation: sakuraFall linear infinite;
+}
+@keyframes sakuraFall {
+  0% { transform: translateY(-10vh) rotate(0deg); opacity: 0; }
+  10% { opacity: 0.6; }
+  90% { opacity: 0.6; }
+  100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
 }
 
-@keyframes twinkle {
-  0% { opacity: 0.3; }
-  100% { opacity: 0.7; }
-}
-
-/* ============================================
-   桌面图标
-   ============================================ */
-.desktop-icons {
-  position: absolute;
-  top: 20px;
-  left: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-  z-index: 10;
-}
-
+/* ================================================
+   桌面图标 — MoeKernel 真实样式
+   ================================================ */
+.icon-area { position: absolute; inset: 0 0 30px 0; z-index: 10; }
 .desktop-icon {
-  width: 80px;
-  text-align: center;
-  cursor: pointer;
-  padding: 8px 4px;
-  border-radius: 4px;
-  transition: background 0.15s;
+  position: absolute; width: 76px; height: 76px;
+  display: flex; flex-direction: column; align-items: center; justify-content: flex-end;
+  gap: 4px; padding: 4px; border-radius: 2px;
+  cursor: default; touch-action: none;
+  background: transparent; border: 1px solid transparent;
 }
-
-.desktop-icon:hover {
-  background: rgba(255, 110, 199, 0.2);
-  box-shadow: 0 0 10px rgba(255, 110, 199, 0.3);
-}
-
 .desktop-icon.selected {
-  background: rgba(0, 212, 255, 0.25);
-  box-shadow: 0 0 10px rgba(0, 212, 255, 0.4);
+  background: var(--xp-selection-overlay);
+  border: 1px dotted rgba(255,255,255,0.7);
 }
-
+.desktop-icon.selected .icon-img { filter: brightness(0.85) saturate(1.2); }
+.desktop-icon.selected .icon-label { background: var(--xp-selection-label-bg); }
 .icon-img {
-  font-size: 36px;
-  margin-bottom: 4px;
-  filter: drop-shadow(0 0 5px var(--neon-pink));
+  width: 45px; height: 45px; object-fit: contain; pointer-events: none;
+  font-size: 38px; line-height: 45px; text-align: center;
+  filter: drop-shadow(0 0 6px rgba(255, 73, 105, 0.3));
 }
-
 .icon-label {
-  font-size: 12px;
-  color: var(--text-light);
-  text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
-  font-family: 'Noto Sans SC', sans-serif;
+  color: #fff; text-shadow: 1px 1px 2px rgba(0,0,0,0.9);
+  font-size: 11px; text-align: center; word-break: break-word;
+  max-width: 72px; padding: 1px 3px; line-height: 1.2;
+  font-family: var(--font-xp);
+  border-radius: 1px;
 }
 
-/* ============================================
-   桌面宠物
-   ============================================ */
-.desktop-pet {
-  position: absolute;
-  bottom: 60px;
-  right: 30px;
-  z-index: 50;
-  cursor: pointer;
-  animation: petFloat 3s ease-in-out infinite;
-}
-
-@keyframes petFloat {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-10px); }
-}
-
-.pet-sprite {
-  font-size: 40px;
-  filter: drop-shadow(0 0 8px var(--sakura-pink));
-}
-
-.pet-bubble {
-  position: absolute;
-  bottom: 50px;
-  right: 0;
-  background: var(--sakura-light);
-  border: 2px solid var(--sakura-pink);
-  border-radius: 12px;
-  padding: 8px 14px;
-  font-size: 13px;
-  color: var(--text-dark);
-  white-space: nowrap;
-  box-shadow: 0 0 15px var(--sakura-pink);
-  animation: bubblePop 0.3s ease;
-}
-
-@keyframes bubblePop {
-  0% { transform: scale(0); }
-  100% { transform: scale(1); }
-}
-
-/* ============================================
-   窗口
-   ============================================ */
+/* ================================================
+   窗口 — MoeKernel 真实 XP Classic Silver
+   ================================================ */
 .window {
-  position: absolute;
-  background: var(--xp-window-bg);
-  border: 2px solid var(--xp-window-border);
-  border-radius: 8px 8px 0 0;
-  box-shadow: 0 4px 30px rgba(0,0,0,0.5), 0 0 20px var(--crt-glow);
-  min-width: 300px;
-  min-height: 200px;
-  z-index: 100;
-  display: flex;
-  flex-direction: column;
-}
-
-.window-titlebar {
-  height: 32px;
-  background: linear-gradient(180deg, var(--xp-titlebar-grad1), var(--xp-titlebar-grad2));
-  display: flex;
-  align-items: center;
-  padding: 0 4px 0 8px;
-  cursor: move;
+  position: absolute; display: flex; flex-direction: column;
+  box-shadow: 2px 2px 8px rgba(0,0,0,0.6), inset 0 0 0 1px rgba(255,255,255,0.3);
+  border: 2px solid var(--xp-chrome-border-dark);
   border-radius: 6px 6px 0 0;
-  flex-shrink: 0;
+  overflow: hidden; font-family: var(--font-xp);
+  min-width: 200px; min-height: 120px;
 }
-
+/* 标题栏 — 银色金属渐变（从 MoeKernel 源码提取） */
+.window-titlebar {
+  background: linear-gradient(180deg, #e8e8e8 0%, #d0d0d0 45%, #b8b8b8 55%, #c0c0c0 100%);
+  padding: 3px 4px; display: flex; align-items: center; gap: 4px;
+  cursor: move; flex-shrink: 0; min-height: 28px;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.6);
+}
 .window-title {
-  flex: 1;
-  color: white;
-  font-size: 13px;
-  font-weight: bold;
-  text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+  flex: 1; color: #000; font-size: 12px; font-weight: bold;
+  text-shadow: 1px 1px 1px rgba(255,255,255,0.4);
+  overflow: hidden; white-space: nowrap; text-overflow: ellipsis;
 }
-
-.window-controls {
-  display: flex;
-  gap: 2px;
+.window-btns { display: flex; gap: 2px; flex-shrink: 0; }
+.win-btn {
+  width: 21px; height: 21px; border: 1px solid var(--xp-chrome-border);
+  border-radius: 3px; font-size: 11px; font-weight: bold;
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  line-height: 1; font-family: var(--font-xp); padding: 0; flex-shrink: 0;
 }
-
-.window-btn {
-  width: 24px;
-  height: 22px;
-  border: 1px solid rgba(255,255,255,0.3);
-  background: linear-gradient(180deg, #5ba3fc, #1e5cc8);
-  color: white;
-  font-size: 12px;
-  cursor: pointer;
-  border-radius: 3px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: bold;
-}
-
-.window-btn:hover {
-  background: linear-gradient(180deg, #6bb5ff, #2e6ee0);
-}
-
-.window-btn.close:hover {
-  background: linear-gradient(180deg, #ff6b6b, #c92a2a);
-}
-
-.window-body {
-  flex: 1;
-  overflow: auto;
-  padding: 16px;
-  color: var(--text-dark);
-  font-size: 14px;
-  line-height: 1.8;
-}
-
-/* 自定义滚动条 */
+.win-btn.min { background: linear-gradient(180deg, #f4f4f4, #c8c8c8); color: #000; }
+.win-btn.max { background: linear-gradient(180deg, #f4f4f4, #c8c8c8); color: #000; }
+.win-btn.close { background: linear-gradient(180deg, #ff9a9a, #d93b3b); color: #fff; }
+.win-btn.min:hover { background: linear-gradient(180deg, #ececec, #b8b8b8); }
+.win-btn.max:hover { background: linear-gradient(180deg, #ececec, #b8b8b8); }
+.win-btn.close:hover { background: linear-gradient(180deg, #ff5050, #c92a2a); }
+.window-body { flex: 1; background: #fff; overflow: auto; position: relative; }
+/* 滚动条 — XP 风格 */
 .window-body::-webkit-scrollbar { width: 16px; }
 .window-body::-webkit-scrollbar-track { background: #e8e4d0; }
 .window-body::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, #6ba6de, #2e6cc8);
-  border: 1px solid #1a5cb8;
-  border-radius: 2px;
+  background: linear-gradient(180deg, #d8d8d8, #a0a0a0);
+  border: 1px solid #767676; border-radius: 2px;
 }
 
-/* ============================================
-   任务栏
-   ============================================ */
+/* ================================================
+   任务栏 — MoeKernel 真实样式
+   ================================================ */
 .taskbar {
-  position: absolute;
-  bottom: 0; left: 0; width: 100%;
-  height: 40px;
-  background: linear-gradient(180deg, var(--xp-taskbar-light), var(--xp-taskbar));
-  display: flex;
-  align-items: center;
-  padding: 0 4px;
-  z-index: 1000;
-  box-shadow: 0 -2px 10px rgba(0,0,0,0.3);
+  position: absolute; bottom: 0; left: 0; right: 0; height: 30px;
+  background: linear-gradient(180deg, var(--xp-chrome-mid), var(--xp-chrome-dark));
+  border-top: 2px solid var(--xp-chrome-light);
+  box-shadow: 0 -1px 3px rgba(0,0,0,0.3);
+  display: flex; align-items: stretch; z-index: 1000;
+  font-family: var(--font-xp);
 }
-
-.start-button {
-  height: 34px;
-  padding: 0 12px;
-  background: linear-gradient(180deg, #5ba3fc 0%, #1e5cc8 100%);
-  border: 2px solid #f0f0f0;
-  border-radius: 5px;
-  color: white;
-  font-weight: bold;
-  font-size: 14px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  text-shadow: 1px 1px 2px rgba(0,0,0,0.4);
-  transition: all 0.15s;
+/* 开始按钮 — 绿色斜体（从 MoeKernel 源码提取） */
+.start-btn {
+  display: flex; align-items: center; gap: 4px;
+  padding: 0 10px 0 6px;
+  background: linear-gradient(180deg, #3cb84a 0%, #28a035 40%, #1e8c2a 100%);
+  border: none; border-right: 1px solid #1a6e1a;
+  border-radius: 0 12px 12px 0; cursor: pointer;
+  box-shadow: 1px 0 3px rgba(0,0,0,0.3);
+  min-width: 96px; font-family: var(--font-xp);
+  font-size: 14px; font-weight: bold; font-style: italic;
+  color: #fff; text-shadow: 1px 1px 2px rgba(0,0,0,0.6);
+  letter-spacing: 0.5px; flex-shrink: 0;
 }
-
-.start-button:hover {
-  background: linear-gradient(180deg, #6bb5ff, #2e6ee0);
+.start-btn:hover {
+  background: linear-gradient(180deg, #4cc85a 0%, #38b045 40%, #2e9c3a 100%);
 }
-
-.start-button.active {
-  background: linear-gradient(180deg, #1e5cc8, #5ba3fc);
-  box-shadow: inset 1px 1px 4px rgba(0,0,0,0.3);
+.start-btn.active {
+  background: linear-gradient(180deg, #1a6a1a 0%, #228b22 50%, #2ea52e 100%);
+  box-shadow: inset 1px 1px 3px rgba(0,0,0,0.5);
 }
+.start-flag { font-size: 18px; }
+.start-text { font-size: 14px; }
 
-.start-flag {
-  font-size: 18px;
-  color: var(--neon-yellow);
-  text-shadow: 0 0 6px var(--neon-yellow);
+.taskbar-windows {
+  flex: 1; display: flex; align-items: center; gap: 3px; padding: 2px 4px; overflow: hidden;
 }
-
-.taskbar-divider {
-  width: 2px;
-  height: 28px;
-  background: rgba(255,255,255,0.2);
-  margin: 0 4px;
+.taskbar-win {
+  display: flex; align-items: center; gap: 5px;
+  height: 22px; padding: 0 8px; min-width: 120px; max-width: 160px;
+  background: linear-gradient(180deg, #c8c8c8, #a0a0a0);
+  border: 1px solid #767676; border-radius: 3px;
+  font-family: var(--font-xp); font-size: 11px; color: #000;
+  text-shadow: 1px 1px 1px rgba(255,255,255,0.4);
+  cursor: pointer; overflow: hidden; flex-shrink: 0;
+  white-space: nowrap; text-overflow: ellipsis;
 }
-
-.taskbar-items {
-  flex: 1;
-  display: flex;
-  gap: 4px;
-  overflow: hidden;
+.taskbar-win.active {
+  background: linear-gradient(180deg, #e0e0e0, #b8b8b8);
+  border: 1px solid #888; font-weight: bold;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.6);
 }
+.taskbar-win:hover { background: linear-gradient(180deg, #d8d8d8, #a8a8a8); }
 
-.taskbar-item {
-  height: 30px;
-  padding: 0 10px;
-  background: linear-gradient(180deg, #4b8bdf, #245edb);
-  border: 1px solid rgba(255,255,255,0.2);
-  border-radius: 3px;
-  color: white;
-  font-size: 12px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  min-width: 120px;
-  max-width: 180px;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-}
-
-.taskbar-item.active {
-  background: linear-gradient(180deg, #1a4cb0, #3a6ed0);
-  box-shadow: inset 1px 1px 4px rgba(0,0,0,0.3);
-}
-
+/* 系统托盘 — MoeKernel 真实样式 */
 .system-tray {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 0 8px;
-  height: 34px;
-  background: linear-gradient(180deg, #d4d0c8, #b8b4a8);
-  border-radius: 4px;
+  display: flex; align-items: center; gap: 8px; padding: 0 8px;
+  background: linear-gradient(180deg, var(--xp-chrome-mid), var(--xp-chrome-darker));
+  border-left: 1px solid var(--xp-chrome-border-dark);
+}
+.tray-icon { font-size: 14px; }
+.tray-clock {
+  font-family: var(--font-xp); font-size: 12px; color: #000;
+  text-shadow: 1px 1px 1px rgba(255,255,255,0.4);
 }
 
-.tray-icon {
-  font-size: 12px;
-  color: var(--text-dark);
-  font-family: 'VT323', monospace;
-  font-size: 16px;
-}
-
-/* ============================================
-   开始菜单
-   ============================================ */
+/* ================================================
+   开始菜单 — MoeKernel 真实样式
+   ================================================ */
 .start-menu {
-  position: absolute;
-  bottom: 40px;
-  left: 4px;
-  width: 260px;
-  background: white;
-  border: 2px solid var(--xp-titlebar);
-  border-radius: 8px 8px 0 0;
-  box-shadow: 0 -4px 30px rgba(0,0,0,0.4), 0 0 20px var(--crt-glow);
-  z-index: 999;
-  overflow: hidden;
-  animation: menuSlideUp 0.2s ease;
+  position: absolute; bottom: 30px; left: 0; width: 420px; z-index: 10000;
+  box-shadow: 4px -4px 16px rgba(0,0,0,0.6);
+  border-radius: 8px 8px 0 0; overflow: hidden;
+  font-family: var(--font-xp); font-size: 13px;
+  border: 1px solid var(--xp-chrome-border-dark); border-bottom: none;
+  animation: menuSlide 0.2s ease;
 }
-
-@keyframes menuSlideUp {
-  0% { transform: translateY(20px); opacity: 0; }
-  100% { transform: translateY(0); opacity: 1; }
+@keyframes menuSlide { from { transform: translateY(10px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+.start-header {
+  background: linear-gradient(180deg, var(--xp-chrome-mid), var(--xp-chrome-darker));
+  padding: 8px 12px; display: flex; align-items: center; gap: 10px;
+  border-bottom: 2px solid #888;
 }
-
-.start-menu-header {
-  height: 60px;
-  background: linear-gradient(180deg, var(--xp-luna-start), var(--xp-luna-end));
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  padding: 8px 14px;
-  color: white;
-  text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+.start-avatar {
+  width: 50px; height: 50px; border: 2px solid var(--xp-chrome-dark);
+  border-radius: 2px; background: #fff;
+  display: flex; align-items: center; justify-content: center; font-size: 28px;
 }
-
-.start-menu-user {
-  font-size: 18px;
-  font-weight: bold;
+.start-username {
+  color: #000; font-weight: bold; font-size: 15px;
+  text-shadow: 1px 1px 3px rgba(255,255,255,0.5);
 }
-
-.start-menu-sub {
-  font-size: 11px;
-  opacity: 0.8;
+.start-body { display: flex; height: 360px; }
+.start-left {
+  flex: 1; background: #fff; display: flex; flex-direction: column;
+  overflow-y: auto; padding-top: 4px;
 }
-
-.start-menu-items {
-  padding: 6px;
+.start-right {
+  width: 190px; background: linear-gradient(180deg, #ececec, #dcdcdc);
+  border-left: 1px solid var(--xp-chrome-border);
+  display: flex; flex-direction: column; overflow-y: auto; padding-top: 6px;
 }
-
-.start-menu-item {
-  padding: 8px 12px;
-  cursor: pointer;
-  border-radius: 4px;
-  font-size: 13px;
-  color: var(--text-dark);
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  transition: background 0.1s;
+.start-program, .start-place {
+  display: flex; align-items: center; gap: 10px; padding: 6px 12px;
+  background: transparent; color: #000; border: none; cursor: pointer;
+  width: 100%; font-size: 13px; font-family: var(--font-xp); text-align: left;
 }
-
-.start-menu-item:hover {
-  background: linear-gradient(90deg, var(--xp-blue), var(--xp-blue-light));
-  color: white;
+.start-program:hover, .start-place:hover { background: var(--xp-chrome-highlight); }
+.start-program-icon { font-size: 24px; flex-shrink: 0; }
+.start-footer {
+  background: linear-gradient(180deg, var(--xp-chrome-dark), var(--xp-chrome-darker));
+  border-top: 2px solid #888; display: flex; justify-content: flex-end;
+  gap: 8px; padding: 6px 12px;
 }
-
-.menu-icon {
-  font-size: 18px;
+.start-footer-btn {
+  display: flex; align-items: center; gap: 6px; padding: 4px 10px;
+  background: linear-gradient(180deg, #d8d8d8, #a8a8a8);
+  border: 1px solid #888; border-radius: 4px; color: #000;
+  font-size: 12px; font-family: var(--font-xp); cursor: pointer;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.4);
 }
+.start-footer-btn:hover { background: linear-gradient(180deg, #ececec, #bcbcbc); }
 
-.menu-separator {
-  border: none;
-  border-top: 1px solid #ccc;
-  margin: 4px 8px;
+/* ================================================
+   桌宠 — Fuyukawa 小猪
+   ================================================ */
+.pet {
+  position: absolute; bottom: 40px; right: 20px; z-index: 50;
+  cursor: pointer; animation: petFloat 3s ease-in-out infinite;
 }
+@keyframes petFloat { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+.pet-sprite { font-size: 36px; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3)); }
+.pet-bubble {
+  position: absolute; bottom: 45px; right: -10px;
+  background: var(--paper); border: 1px solid var(--pink);
+  border-radius: 8px; padding: 6px 10px; font-size: 12px;
+  color: var(--ink); white-space: nowrap;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  font-family: var(--font-body);
+  animation: bubblePop 0.3s ease;
+}
+@keyframes bubblePop { from { transform: scale(0); } to { transform: scale(1); } }
 
-/* ============================================
+/* ================================================
    关机画面
-   ============================================ */
-.shutdown-screen {
-  position: fixed;
-  top: 0; left: 0; width: 100%; height: 100%;
-  background: #000;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 10000;
+   ================================================ */
+.shutdown {
+  position: fixed; inset: 0; z-index: 10000; background: #000;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 30px;
 }
-
-.shutdown-content {
-  text-align: center;
-  color: var(--neon-blue);
-  font-family: 'VT323', monospace;
-  font-size: 24px;
+.shutdown-text {
+  font-family: var(--font-xp); font-size: 18px; color: #c0c0c0;
+  text-shadow: 1px 1px 2px rgba(255,255,255,0.2);
 }
-
-.shutdown-sub {
-  margin: 20px 0;
-  color: var(--neon-pink);
-  font-size: 18px;
-}
-
 .restart-btn {
-  padding: 10px 30px;
-  background: linear-gradient(180deg, var(--neon-blue), var(--neon-purple));
-  border: 2px solid var(--neon-pink);
-  color: white;
-  font-size: 16px;
-  cursor: pointer;
-  border-radius: 4px;
-  text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
-  box-shadow: 0 0 20px var(--neon-blue);
+  padding: 8px 24px; background: linear-gradient(180deg, #3cb84a, #1e8c2a);
+  border: 1px solid #1a6e1a; border-radius: 4px; color: #fff;
+  font-family: var(--font-xp); font-size: 14px; cursor: pointer;
+  font-style: italic; font-weight: bold;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.6);
 }
 
-/* ============================================
-   博客文章样式
-   ============================================ */
-.blog-post {
-  margin-bottom: 24px;
-  padding: 16px;
-  background: white;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  box-shadow: 2px 2px 6px rgba(0,0,0,0.1);
-}
+/* ================================================
+   窗口内容 — Fuyukawa 手账风
+   ================================================ */
+.content { padding: 20px; font-family: var(--font-body); color: var(--ink); line-height: 1.75; }
+.content h1 { font-size: 20px; color: var(--ink); margin-bottom: 16px; border-bottom: 2px solid var(--pink); padding-bottom: 8px; }
+.content h2 { font-size: 16px; color: var(--ink); margin: 16px 0 8px; }
 
-.blog-post-title {
-  font-size: 18px;
-  font-weight: bold;
-  color: var(--xp-blue);
-  margin-bottom: 8px;
+/* 博客文章卡片 — Fuyukawa 纸张感 */
+.post-card {
+  background: var(--paper); border: 1px solid var(--line);
+  border-radius: 6px; padding: 16px; margin-bottom: 14px;
+  box-shadow: 0 4px 12px rgba(68, 82, 110, 0.08);
+  transition: box-shadow 0.2s;
 }
-
-.blog-post-date {
-  font-size: 12px;
-  color: #888;
-  margin-bottom: 12px;
-  font-family: 'VT323', monospace;
+.post-card:hover { box-shadow: 0 8px 24px rgba(68, 82, 110, 0.15); }
+.post-title { font-size: 15px; font-weight: 700; color: var(--ink); margin-bottom: 6px; }
+.post-date { font-size: 12px; color: var(--ink-soft); font-family: var(--font-mono); margin-bottom: 8px; }
+.post-tags { display: flex; gap: 6px; margin-bottom: 8px; }
+.post-tag {
+  padding: 2px 10px; background: var(--pink-soft); color: var(--ink);
+  border-radius: 10px; font-size: 11px;
 }
+.post-excerpt { font-size: 13px; color: var(--ink-soft); line-height: 1.7; }
 
-.blog-post-tags {
-  display: flex;
-  gap: 6px;
-  margin-bottom: 12px;
-}
-
-.blog-tag {
-  padding: 2px 10px;
-  background: var(--sakura-pink);
-  color: var(--text-dark);
-  border-radius: 12px;
-  font-size: 11px;
-  font-weight: bold;
-}
-
-.blog-post-excerpt {
-  font-size: 14px;
-  line-height: 1.8;
-  color: #444;
-}
-
-.read-more {
-  display: inline-block;
-  margin-top: 10px;
-  padding: 4px 16px;
-  background: linear-gradient(180deg, var(--xp-blue-light), var(--xp-blue));
-  color: white;
-  border-radius: 3px;
-  font-size: 12px;
-  cursor: pointer;
-  text-decoration: none;
-}
-
-.read-more:hover {
-  background: linear-gradient(180deg, #5ba3fc, #1e5cc8);
-}
-
-/* ============================================
-   关于我
-   ============================================ */
-.about-card {
-  text-align: center;
-  margin-bottom: 20px;
-}
-
+/* 关于我 — Fuyukawa 手账 */
+.about-section { text-align: center; margin-bottom: 20px; }
 .about-avatar {
-  width: 100px;
-  height: 100px;
-  margin: 0 auto 16px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, var(--neon-pink), var(--neon-blue), var(--neon-purple));
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 50px;
-  box-shadow: 0 0 30px var(--neon-pink);
-  animation: avatarGlow 3s ease-in-out infinite alternate;
+  width: 80px; height: 80px; margin: 0 auto 12px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--pink), var(--blue), var(--lavender));
+  display: flex; align-items: center; justify-content: center; font-size: 40px;
+  box-shadow: 0 4px 16px rgba(247, 183, 200, 0.4);
 }
-
-@keyframes avatarGlow {
-  0% { box-shadow: 0 0 20px var(--neon-pink); }
-  100% { box-shadow: 0 0 40px var(--neon-blue); }
-}
-
-.about-name {
-  font-size: 22px;
-  font-weight: bold;
-  color: var(--text-dark);
-  margin-bottom: 8px;
-}
-
+.about-name { font-size: 18px; font-weight: 700; color: var(--ink); }
+.about-sub { font-size: 12px; color: var(--ink-soft); margin-top: 4px; }
 .about-bio {
-  font-size: 14px;
-  color: #555;
-  line-height: 1.8;
-  text-align: left;
-  padding: 16px;
-  background: #f5f3e8;
-  border-radius: 4px;
-  border-left: 4px solid var(--sakura-pink);
+  text-align: left; padding: 14px; background: var(--cream);
+  border-radius: 6px; border-left: 3px solid var(--pink); font-size: 13px;
 }
-
-/* 技能标签 */
-.skill-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 16px;
-}
-
+.about-bio p { margin-bottom: 8px; }
+.about-bio ul { padding-left: 18px; margin: 8px 0; }
+.about-bio li { margin-bottom: 4px; }
+.skill-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
 .skill-tag {
-  padding: 4px 12px;
-  background: linear-gradient(135deg, var(--moe-mint), var(--neon-blue));
-  color: white;
-  border-radius: 4px;
-  font-size: 12px;
-  font-weight: bold;
-  text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+  padding: 3px 10px; background: var(--mint); color: var(--ink);
+  border-radius: 4px; font-size: 11px; font-weight: 600;
 }
 
-/* ============================================
-   作品集
-   ============================================ */
-.works-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 16px;
-}
-
+/* 作品集 — Fuyukawa 卡片 */
+.works-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; }
 .work-card {
-  background: white;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  overflow: hidden;
-  cursor: pointer;
-  transition: transform 0.2s, box-shadow 0.2s;
+  background: var(--paper); border: 1px solid var(--line); border-radius: 6px;
+  overflow: hidden; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s;
 }
-
-.work-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 6px 20px rgba(0,0,0,0.15), 0 0 15px var(--neon-pink);
-}
-
+.work-card:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(68,82,110,0.15); }
 .work-thumb {
-  height: 120px;
-  background: linear-gradient(135deg, var(--neon-purple), var(--neon-blue), var(--neon-pink));
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 40px;
+  height: 90px; display: flex; align-items: center; justify-content: center; font-size: 36px;
+  background: linear-gradient(135deg, var(--blue-soft), var(--pink-soft));
 }
+.work-info { padding: 8px 10px; }
+.work-title { font-size: 13px; font-weight: 700; color: var(--ink); }
+.work-desc { font-size: 11px; color: var(--ink-soft); margin-top: 2px; }
 
-.work-info {
-  padding: 10px;
+/* 留言板 — Fuyukawa */
+.gb-form { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
+.gb-form input, .gb-form textarea {
+  padding: 8px; border: 1px solid var(--line); border-radius: 4px;
+  font-size: 13px; font-family: var(--font-body); background: var(--paper);
 }
-
-.work-title {
-  font-size: 14px;
-  font-weight: bold;
-  margin-bottom: 4px;
+.gb-form textarea { min-height: 70px; resize: vertical; }
+.gb-form button {
+  align-self: flex-start; padding: 6px 18px;
+  background: linear-gradient(180deg, var(--blue), #7ab0d8);
+  color: var(--ink); border: 1px solid var(--blue); border-radius: 4px;
+  cursor: pointer; font-size: 13px; font-family: var(--font-body); font-weight: 600;
 }
-
-.work-desc {
-  font-size: 11px;
-  color: #777;
+.gb-entry {
+  padding: 12px; background: var(--cream); border-radius: 6px;
+  margin-bottom: 8px; border-left: 3px solid var(--mint);
 }
+.gb-name { font-weight: 700; color: var(--ink); font-size: 13px; }
+.gb-time { font-size: 11px; color: var(--ink-soft); font-family: var(--font-mono); }
+.gb-msg { margin-top: 6px; font-size: 13px; color: var(--ink); }
 
-/* ============================================
-   留言板
-   ============================================ */
-.guestbook-form {
-  margin-bottom: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.guestbook-form input,
-.guestbook-form textarea {
-  padding: 8px;
-  border: 1px solid #aaa;
-  border-radius: 3px;
-  font-size: 13px;
-  font-family: inherit;
-  background: white;
-}
-
-.guestbook-form textarea {
-  min-height: 80px;
-  resize: vertical;
-}
-
-.guestbook-form button {
-  align-self: flex-start;
-  padding: 6px 20px;
-  background: linear-gradient(180deg, var(--xp-blue-light), var(--xp-blue));
-  color: white;
-  border: none;
-  border-radius: 3px;
-  cursor: pointer;
-  font-size: 13px;
-}
-
-.guestbook-form button:hover {
-  background: linear-gradient(180deg, #5ba3fc, #1e5cc8);
-}
-
-.guestbook-entry {
-  padding: 12px;
-  background: #f5f3e8;
-  border-radius: 4px;
-  margin-bottom: 10px;
-  border-left: 4px solid var(--moe-mint);
-}
-
-.guestbook-name {
-  font-weight: bold;
-  color: var(--xp-blue);
-  margin-bottom: 4px;
-}
-
-.guestbook-time {
-  font-size: 11px;
-  color: #999;
-  font-family: 'VT323', monospace;
-}
-
-.guestbook-message {
-  margin-top: 6px;
-  font-size: 13px;
-}
-
-/* ============================================
-   音乐盒
-   ============================================ */
-.music-player {
-  text-align: center;
-}
-
-.music-title {
-  font-size: 16px;
-  font-weight: bold;
-  margin-bottom: 16px;
-  color: var(--xp-blue);
-}
-
-.music-list {
-  list-style: none;
-  text-align: left;
-}
-
+/* 音乐盒 */
+.music-list { list-style: none; }
 .music-item {
-  padding: 8px 12px;
-  border-bottom: 1px solid #ddd;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  transition: background 0.1s;
+  padding: 8px 12px; border-bottom: 1px solid var(--line); cursor: pointer;
+  display: flex; align-items: center; gap: 10px; font-size: 13px;
+}
+.music-item:hover { background: var(--pink-soft); }
+.music-item.playing { background: var(--blue-soft); font-weight: 700; }
+.now-playing {
+  margin-top: 14px; padding: 10px; background: var(--cream);
+  border-radius: 6px; font-size: 12px; text-align: center;
 }
 
-.music-item:hover {
-  background: var(--sakura-light);
-}
-
-.music-item.playing {
-  background: linear-gradient(90deg, var(--sakura-pink), transparent);
-  color: var(--xp-blue);
-  font-weight: bold;
-}
-
-/* ============================================
-   友情链接
-   ============================================ */
-.links-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 12px;
-}
-
+/* 友情链接 */
+.links-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 10px; }
 .link-card {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 12px;
-  background: white;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: all 0.2s;
-  text-decoration: none;
-  color: var(--text-dark);
+  display: flex; align-items: center; gap: 10px; padding: 10px;
+  background: var(--paper); border: 1px solid var(--line); border-radius: 6px;
+  cursor: pointer; text-decoration: none; color: var(--ink); transition: all 0.2s;
 }
-
-.link-card:hover {
-  border-color: var(--neon-pink);
-  box-shadow: 0 0 15px var(--neon-pink);
-  transform: scale(1.02);
+.link-card:hover { border-color: var(--pink); box-shadow: 0 4px 12px rgba(247,183,200,0.2); }
+.link-icon {
+  width: 36px; height: 36px; border-radius: 50%; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center; font-size: 18px;
+  background: linear-gradient(135deg, var(--blue), var(--lavender));
 }
+.link-name { font-size: 13px; font-weight: 700; }
+.link-desc { font-size: 11px; color: var(--ink-soft); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-.link-avatar {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple));
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 20px;
-  flex-shrink: 0;
-}
-
-.link-info {
-  overflow: hidden;
-}
-
-.link-name {
-  font-size: 14px;
-  font-weight: bold;
-}
-
-.link-desc {
-  font-size: 11px;
-  color: #777;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-/* ============================================
-   响应式
-   ============================================ */
+/* 响应式 */
 @media (max-width: 768px) {
-  .desktop-icons {
-    flex-direction: row;
-    flex-wrap: wrap;
-    top: 10px;
-    left: 10px;
-    right: 10px;
-  }
-  .desktop-icon { width: 70px; }
-  .icon-img { font-size: 28px; }
-  .start-menu { width: 220px; }
-  .window { min-width: 250px; }
+  .start-menu { width: 320px; }
+  .start-body { height: 280px; }
+  .start-right { width: 140px; }
 }
