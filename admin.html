@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>管理后台 - 毛地张的复古桌面</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="admin.css">
+</head>
+<body class="admin-body">
+
+  <!-- 登录页 -->
+  <div id="admin-login" class="admin-login">
+    <div class="admin-login-box">
+      <div style="font-size:28px;margin-bottom:16px;">🖥️</div>
+      <h1 class="admin-login-title">管理后台</h1>
+      <p class="admin-login-sub">请输入管理密码</p>
+      <input type="password" id="admin-pw" class="admin-login-input" placeholder="密码" onkeydown="if(event.key==='Enter')doLogin()">
+      <button class="admin-login-btn" onclick="doLogin()">登录</button>
+      <p class="admin-login-hint">默认密码: admin</p>
+    </div>
+  </div>
+
+  <!-- 管理后台主体 -->
+  <div id="admin-app" class="admin-app hidden">
+    <div class="admin-titlebar">
+      <div class="admin-titlebar-left">
+        <img src="assets/icons/1.png" style="width:16px;height:16px;image-rendering:pixelated;">
+        <span class="admin-titlebar-text">毛地张 — 管理后台</span>
+      </div>
+      <button class="admin-logout-btn" onclick="doLogout()">退出登录</button>
+    </div>
+    <div class="admin-main">
+      <nav class="admin-sidebar" id="admin-sidebar"></nav>
+      <main class="admin-content" id="admin-content"></main>
+    </div>
+  </div>
+
+  <script src="admin.js"></script>
+</body>
+</html>

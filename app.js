@@ -15,6 +15,7 @@ var ICONS = [
   { id: 'winamp',    label: 'Winamp',        src: 'assets/icons/Winamp.png',       x: 20, y: 340 },
   { id: 'links',     label: 'Contact Me',    src: 'assets/icons/Contact.png',      x: 20, y: 420 },
   { id: 'recycle',   label: 'Recycle Bin',   src: 'assets/icons/Recycle.png',      x: 20, y: 500 },
+  { id: 'admin',     label: 'Admin',         src: 'assets/icons/My Computer.png',  x: 20, y: 580 },
 ];
 
 var APPS = {
@@ -24,6 +25,7 @@ var APPS = {
   chatbox:   { title: 'ChatBox - 留言板',  icon: 'assets/icons/MSN.png',       w: 520, h: 540, render: renderChatbox },
   winamp:    { title: 'Winamp',           icon: 'assets/icons/Winamp.png',    w: 350, h: 230, render: renderWinamp },
   links:     { title: 'Contact Me',       icon: 'assets/icons/Contact.png',   w: 480, h: 400, render: renderLinks },
+  admin:     { title: 'Admin',           icon: 'assets/icons/My Computer.png', w: 800, h: 600, render: function () { return '<div style="height:100%;"><iframe src="admin.html" style="width:100%;height:100%;border:none;"></iframe></div>'; } },
 };
 
 // 桌宠 — MoeKernel 真实 GIF/PNG
@@ -146,9 +148,10 @@ function makePetDraggable(el) { var d = false, ox, oy; el.addEventListener('mous
 // 内容渲染 — 三融合
 // ================================================
 
-// 博客 — MoeKernel XP 资源管理器
+// 博客 — MoeKernel XP 资源管理器，读取 admin 存储的文章
 function renderBlog() {
-  var posts = [
+  var adminPosts = JSON.parse(localStorage.getItem('blog_posts') || '[]');
+  var defaultPosts = [
     { title: '欢迎来到我的复古桌面', icon: 'assets/icons/Blog.png', category: '公告' },
     { title: 'Y2K 美学：千禧年的赛博浪漫', icon: 'assets/icons/Blog.png', category: '设计' },
     { title: '用纯前端实现 XP 桌面体验', icon: 'assets/icons/Blog.png', category: '技术' },
@@ -157,6 +160,7 @@ function renderBlog() {
     { title: 'Fuyukawa 手账风格 Web 设计', icon: 'assets/icons/Blog.png', category: '设计' },
     { title: 'pcmoe 萌系配色方案', icon: 'assets/icons/Blog.png', category: '设计' },
   ];
+  var posts = adminPosts.map(function (p) { return { title: p.title, icon: 'assets/icons/Blog.png', category: p.category || '未分类' }; }).concat(defaultPosts);
   var categories = ['全部']; posts.forEach(function (p) { if (categories.indexOf(p.category) === -1) categories.push(p.category); });
   return '<div style="height:100%;display:flex;flex-direction:column;background:#fff;">' +
     '<div class="explorer-toolbar"><div class="explorer-menu">' + ['File','Edit','View','Favorites','Tools','Help'].map(function (m) { return '<button>' + m + '</button>'; }).join('') + '</div><div class="explorer-address"><span style="color:#555;font-size:11px;">Address</span><div class="explorer-address-bar">My Blog</div></div></div>' +
@@ -165,14 +169,20 @@ function renderBlog() {
     '<div class="article-grid">' + posts.map(function (p) { return '<div class="article-tile" onclick="alert(\'文章: ' + p.title + '\')"><img class="article-tile-icon" src="' + p.icon + '"><span class="article-tile-label">' + p.title + '</span></div>'; }).join('') + '</div></div></div>';
 }
 
-// 关于我 — Fuyukawa 手账 + Fuyukawa 动漫角色图 + pcmoe 彩色技能标签
+// 关于我 — Fuyukawa 手账 + 读取 admin 存储
 function renderAbout() {
-  var skills = ['HTML/CSS', 'JavaScript', '复古设计', 'Y2K 美学', '二次元', 'GitHub Pages'];
+  var a = JSON.parse(localStorage.getItem('about_config') || '{}');
+  var name = a.name || '毛地张';
+  var titleText = a.title || 'Software Developer · Retro Enthusiast';
+  var location = a.location || 'null';
+  var content = a.content || '';
+  var skillsStr = a.skills || 'HTML/CSS, JavaScript, 复古设计, Y2K 美学, 二次元, GitHub Pages';
+  var skills = skillsStr.split(',').map(function (s) { return s.trim(); }).filter(Boolean);
   return '<div class="about-container">' +
-    '<div class="about-header"><img class="about-avatar" src="assets/avatarSrc.jpg" alt="avatar"><div><div class="about-name">毛地张</div><div class="about-title">Software Developer · Retro Enthusiast</div><div class="about-location">null</div></div></div>' +
+    '<div class="about-header"><img class="about-avatar" src="assets/avatarSrc.jpg" alt="avatar"><div><div class="about-name">' + esc(name) + '</div><div class="about-title">' + esc(titleText) + '</div><div class="about-location">' + esc(location) + '</div></div></div>' +
     '<div class="about-content">' +
       '<h2>简介</h2>' +
-      '<p>你好！我是<strong>毛地张</strong>，一个热爱复古美学和二次元文化的开发者。</p>' +
+      (content ? '<p>' + esc(content) + '</p>' : '') +
       '<p>这个博客融合了三个优秀项目的元素：</p>' +
       '<ul><li><strong>MoeKernel_Desktop</strong> — Windows XP 桌面交互（窗口、任务栏、开始菜单）</li><li><strong>Yuimi-chaya</strong> — Fuyukawa Kagari 手账风格（纸张色、樱花雨、动漫角色）</li><li><strong>pcmoe.net</strong> — 萌系彩色配色（红橙黄绿青蓝紫）</li></ul>' +
       '<h2>喜欢的作品</h2>' +
@@ -210,6 +220,11 @@ function renderWinamp() { return '<div class="winamp-container"><div class="wina
 
 // 友情链接 — Fuyukawa 手账 + 三个参考源
 function renderLinks() {
-  var links = [{ name: 'Yuimi Lab', desc: '二次元叙事+技术记录', icon: '🌸', url: 'https://yuimi-chaya.github.io' }, { name: 'pcmoe.net', desc: '复古PC萌系', icon: '🖥️', url: 'https://www.pcmoe.net/' }, { name: 'MoeKernel', desc: 'XP风格桌面系统', icon: '💻', url: 'https://github.com/NNNullptr/MoeKernel_Desktop' }, { name: 'GitHub', desc: '我的GitHub', icon: '🐙', url: 'https://github.com/520maodizhang' }];
+  var adminLinks = JSON.parse(localStorage.getItem('links_config') || '[]');
+  var defaultLinks = [{ name: 'Yuimi Lab', desc: '二次元叙事+技术记录', icon: '🌸', url: 'https://yuimi-chaya.github.io' }, { name: 'pcmoe.net', desc: '复古PC萌系', icon: '🖥️', url: 'https://www.pcmoe.net/' }, { name: 'MoeKernel', desc: 'XP风格桌面系统', icon: '💻', url: 'https://github.com/NNNullptr/MoeKernel_Desktop' }, { name: 'GitHub', desc: '我的GitHub', icon: '🐙', url: 'https://github.com/520maodizhang' }];
+  var links = adminLinks.length > 0 ? adminLinks : defaultLinks;
   return '<div class="links-container"><div class="links-grid">' + links.map(function (l) { return '<a class="link-card" href="' + l.url + '" target="_blank" rel="noopener"><div class="link-icon">' + l.icon + '</div><div><div class="link-name">' + l.name + '</div><div class="link-desc">' + l.desc + '</div></div></a>'; }).join('') + '</div></div>';
 }
+
+// 工具函数
+function esc(s) { if (!s) return ''; return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
